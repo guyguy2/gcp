@@ -1,5 +1,6 @@
 # Java / Maven
 backend/target/
+services/api/target/
 backend/.mvn/
 backend/mvnw
 backend/mvnw.cmd
@@ -11,6 +12,8 @@ backend/mvnw.cmd
 # Node / React
 frontend/node_modules/
 frontend/build/
+services/web/node_modules/
+services/web/build/
 frontend/.env.local
 frontend/.env.development.local
 frontend/.env.test.local

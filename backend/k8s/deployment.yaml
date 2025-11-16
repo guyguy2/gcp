@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devhub-api
+  labels:
+    app: devhub-api
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devhub-api
+  template:
+    metadata:
+      labels:
+        app: devhub-api
+        version: v1
+    spec:
+      # Workload Identity - binds K8s SA to Google SA
+      # This enables secure GCP authentication without JSON keys
+      serviceAccountName: devhub-ksa
+
+      containers:
+      - name: devhub-container
+        # Replace PROJECT_ID with your actual GCP project ID
+        image: us-central1-docker.pkg.dev/PROJECT_ID/devhub-repo/devhub-api:latest
+
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+
+        env:
+        # GCP Project ID - override from ConfigMap or directly
+        - name: GCP_PROJECT_ID
+          value: "developer-hub-learning"
+
+        # GCS Bucket name
+        - name: GCS_BUCKET
+          value: "devhub-storage"
+
+        # Resource limits - CRITICAL for staying within free tier
+        # Autopilot requires these to be set
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+
+        # Liveness probe - restart container if unhealthy
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Readiness probe - don't send traffic until ready
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Startup probe - give app time to start
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 10
+
+      # Security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000

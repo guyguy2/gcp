@@ -1,0 +1,77 @@
+name: Deploy Frontend to GCS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  FRONTEND_BUCKET: ${{ secrets.FRONTEND_BUCKET }}
+
+jobs:
+  deploy:
+    name: Build and Deploy Frontend
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Build React app
+      working-directory: ./frontend
+      env:
+        # Set API URL - this should point to your GKE ingress
+        REACT_APP_API_URL: ${{ secrets.API_URL }}
+      run: npm run build
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+        service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Deploy to GCS
+      working-directory: ./frontend
+      run: |
+        # Upload all files to GCS bucket
+        gsutil -m rsync -r -d build gs://${{ env.FRONTEND_BUCKET }}
+
+        # Set cache control for static assets
+        gsutil -m setmeta -h "Cache-Control:public, max-age=31536000" \
+          gs://${{ env.FRONTEND_BUCKET }}/static/**
+
+        # Set cache control for index.html (no cache)
+        gsutil setmeta -h "Cache-Control:no-cache, no-store, must-revalidate" \
+          gs://${{ env.FRONTEND_BUCKET }}/index.html
+
+    - name: Make bucket public (if needed)
+      run: |
+        # Ensure the bucket is publicly readable
+        gsutil iam ch allUsers:objectViewer gs://${{ env.FRONTEND_BUCKET }}
+
+    - name: Display deployment info
+      run: |
+        echo "Frontend deployed successfully!"
+        echo "Access your app at: http://storage.googleapis.com/${{ env.FRONTEND_BUCKET }}/index.html"

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devhub-ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    # Enable HTTP to HTTPS redirect (optional, requires SSL cert)
+    # networking.gke.io/managed-certificates: "devhub-cert"
+    # kubernetes.io/ingress.allow-http: "false"
+  labels:
+    app: devhub-api
+spec:
+  defaultBackend:
+    service:
+      name: devhub-api-svc
+      port:
+        number: 80
+
+  # Optional: Add rules for specific paths or hosts
+  # rules:
+  # - host: devhub.example.com
+  #   http:
+  #     paths:
+  #     - path: /api
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: devhub-api-svc
+  #           port:
+  #             number: 80

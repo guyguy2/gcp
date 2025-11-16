@@ -1,0 +1,11 @@
+# Kubernetes Service Account for Workload Identity
+# This will be bound to a Google Service Account for GCP authentication
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: devhub-ksa
+  namespace: default
+  annotations:
+    # This annotation binds the KSA to the GSA
+    # Replace PROJECT_ID with your actual GCP project ID
+    iam.gke.io/gcp-service-account: devhub-gsa@PROJECT_ID.iam.gserviceaccount.com

@@ -107,7 +107,7 @@ gcloud container clusters get-credentials devhub-cluster \
     --region us-central1
 ```
 
-**?? Why Autopilot?**
+**Why Autopilot?**
 - Standard GKE charges for control plane + nodes
 - Autopilot = free cluster management + some free compute
 - Perfect for learning and low-traffic apps

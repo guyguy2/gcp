@@ -2,21 +2,21 @@
 
 Let me merge the best elements of both approaches into a **superior learning path** that's educational, practical, and free-tier optimized.
 
-## ? Project: Developer Hub Platform
+## Project: Developer Hub Platform
 
 **What you'll build:** A developer portfolio that also serves as your personal code snippet manager and learning journal - actually useful for your daily work while teaching you GCP comprehensively.
 
 **Why this combination is better:**
-- ? Starts simple, scales complex (progressive learning)
-- ? **GKE Autopilot** focus (critical for staying free)
-- ? Real-world security (Workload Identity)
-- ? Multiple IaC approaches (K8s YAMLs ? Config Connector ? Terraform)
-- ? Cloud Run comparison (understand when to use what)
-- ? Actually useful (you'll use this daily)
+- Starts simple, scales complex (progressive learning)
+- **GKE Autopilot** focus (critical for staying free)
+- Real-world security (Workload Identity)
+- Multiple IaC approaches (K8s YAMLs -> Config Connector -> Terraform)
+- Cloud Run comparison (understand when to use what)
+- Actually useful (you'll use this daily)
 
 ---
 
-## ? Critical Free Tier Rules
+## Critical Free Tier Rules
 
 **MUST DO:**
 1. **Use GKE Autopilot** - Standard GKE will cost money
@@ -33,7 +33,7 @@ Let me merge the best elements of both approaches into a **superior learning pat
 
 ---
 
-## ? Project Phases (Progressive Complexity)
+## Project Phases (Progressive Complexity)
 
 ### Phase 1: Foundation (Week 1)
 **Goal:** Get infrastructure running with K8s YAMLs
@@ -733,7 +733,7 @@ gsutil -m rsync -r build gs://YOUR-FRONTEND-BUCKET
 
 ---
 
-## ? Learning Outcomes by Phase
+## Learning Outcomes by Phase
 
 | Phase | Skills Learned | GCP Services |
 |-------|----------------|--------------|
@@ -748,11 +748,11 @@ gsutil -m rsync -r build gs://YOUR-FRONTEND-BUCKET
 
 ---
 
-## ? Why This Combined Approach is Superior
+## Why This Combined Approach is Superior
 
 1. **Progressive complexity** - Start simple, add features incrementally
 2. **Real security** - Workload Identity from the start
-3. **Multiple IaC approaches** - K8s YAMLs ? Config Connector ? (optional) Terraform
+3. **Multiple IaC approaches** - K8s YAMLs -> Config Connector -> (optional) Terraform
 4. **Practical comparison** - GKE vs Cloud Run side-by-side
 5. **Production patterns** - Monitoring, secrets, backups, CI/CD
 6. **Actually useful** - You'll use this tool daily
@@ -761,7 +761,7 @@ gsutil -m rsync -r build gs://YOUR-FRONTEND-BUCKET
 
 ---
 
-## ? Cost Monitoring Setup
+## Cost Monitoring Setup
 
 ```bash
 # Set budget alerts
@@ -776,7 +776,7 @@ gcloud billing budgets create \
 
 ---
 
-## ? Next Steps
+## Next Steps
 
 **Week 1:** Phases 1-2 (Get it running)
 **Week 2:** Phases 3-4 (Secure it, automate it)

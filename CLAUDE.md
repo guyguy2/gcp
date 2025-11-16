@@ -13,6 +13,25 @@ Developer Hub Platform - A GCP learning project that combines a developer portfo
 - Cloud Run comparison deployment for architectural learning
 - Free tier optimized: single cluster in us-central1/us-west1/us-east1
 
+## Project Structure (Deployment-Focused)
+
+```
+/
+├── services/
+│   ├── api/             # Backend service (Java Spring Boot)
+│   └── web/             # Frontend service (React)
+├── deploy/
+│   ├── kubernetes/      # K8s manifests (deployment, service, ingress)
+│   ├── gcp/            # GCP-specific configs (future: Config Connector)
+│   └── ci-cd/          # GitHub Actions workflows (reference copies)
+├── shared/
+│   ├── configs/        # Shared configurations
+│   └── docs/           # Documentation (README, PLAN, guides)
+└── tools/              # Scripts and utilities (setup-gcp.sh)
+```
+
+**Note:** GitHub Actions workflows are stored in both `.github/workflows/` (required by GitHub) and `deploy/ci-cd/` (organizational reference).
+
 ## Common Commands
 
 ### GCP Setup
@@ -30,7 +49,7 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 ### Backend Development (Java Spring Boot)
 ```bash
 # Build with Maven
-cd backend
+cd services/api
 mvn clean package
 
 # Build Docker image
@@ -40,7 +59,7 @@ docker build -t us-central1-docker.pkg.dev/developer-hub-learning/devhub-repo/de
 docker push us-central1-docker.pkg.dev/developer-hub-learning/devhub-repo/devhub-api:latest
 
 # Deploy to GKE
-kubectl apply -f k8s/
+kubectl apply -f ../../deploy/kubernetes/
 kubectl rollout status deployment/devhub-api
 
 # View logs
@@ -50,7 +69,7 @@ kubectl logs -f deployment/devhub-api
 ### Testing
 ```bash
 # Run Java tests
-cd backend
+cd services/api
 mvn test
 
 # Run specific test
@@ -59,7 +78,7 @@ mvn test -Dtest=ClassName#methodName
 
 ### Frontend Development (React)
 ```bash
-cd frontend
+cd services/web
 npm install
 npm start          # Development server
 npm run build      # Production build
@@ -100,14 +119,15 @@ kubectl get storagebucket -n config-connector
 Workload Identity binds Kubernetes Service Account (devhub-ksa) to Google Service Account (devhub-gsa@developer-hub-learning.iam.gserviceaccount.com). Pods authenticate automatically without JSON keys. Required roles: roles/datastore.user, roles/storage.objectAdmin.
 
 ### Infrastructure as Code Progression
-1. Phase 1-2: Manual kubectl apply of k8s/*.yaml files
-2. Phase 5: Config Connector manages GCP resources as K8s objects
+1. Phase 1-2: Manual kubectl apply of deploy/kubernetes/*.yaml files
+2. Phase 5: Config Connector manages GCP resources as K8s objects (deploy/gcp/)
 3. Optional: Terraform for comparison/production scenarios
 
 ### CI/CD
 GitHub Actions workflows deploy on push to main:
-- backend-deploy.yml: Maven build, Docker build/push, kubectl apply
-- frontend-deploy.yml: React build, GCS upload
+- backend-deploy.yml: Maven build, Docker build/push, kubectl apply (services/api/)
+- frontend-deploy.yml: React build, GCS upload (services/web/)
+- Workflows located in .github/workflows/ with reference copies in deploy/ci-cd/
 - Uses Workload Identity Federation for GCP authentication (no service account keys)
 
 ## GCS Bucket Structure

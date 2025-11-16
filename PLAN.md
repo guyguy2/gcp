@@ -66,10 +66,10 @@ gsutil mb -l us-central1 gs://[YOUR-NAME]-devhub-storage
 **Bucket structure:**
 ```
 devhub-storage/
-??? configs/          # App configs (satisfies your requirement)
-??? snippets/         # Code file uploads
-??? backups/          # Firestore exports
-??? assets/           # Images, diagrams
++-- configs/          # App configs (satisfies your requirement)
++-- snippets/         # Code file uploads
++-- backups/          # Firestore exports
++-- assets/           # Images, diagrams
 ```
 
 #### 1.3 Firestore Setup
@@ -130,23 +130,23 @@ gcloud artifacts repositories create devhub-repo \
 **Project structure:**
 ```
 backend/
-??? src/main/java/com/devhub/
-?   ??? controller/
-?   ?   ??? PortfolioController.java  # GET /api/portfolio
-?   ?   ??? SnippetsController.java   # CRUD /api/snippets
-?   ??? service/
-?   ?   ??? FirestoreService.java
-?   ?   ??? StorageService.java
-?   ??? model/
-?   ?   ??? PortfolioLink.java
-?   ?   ??? CodeSnippet.java
-?   ??? DevHubApplication.java
-??? k8s/
-?   ??? deployment.yaml
-?   ??? service.yaml
-?   ??? ingress.yaml
-??? Dockerfile
-??? pom.xml
++-- src/main/java/com/devhub/
+|   +-- controller/
+|   |   +-- PortfolioController.java  # GET /api/portfolio
+|   |   +-- SnippetsController.java   # CRUD /api/snippets
+|   +-- service/
+|   |   +-- FirestoreService.java
+|   |   +-- StorageService.java
+|   +-- model/
+|   |   +-- PortfolioLink.java
+|   |   +-- CodeSnippet.java
+|   +-- DevHubApplication.java
++-- k8s/
+|   +-- deployment.yaml
+|   +-- service.yaml
+|   +-- ingress.yaml
++-- Dockerfile
++-- pom.xml
 ```
 
 **Key Dependencies (pom.xml):**
